@@ -1,9 +1,9 @@
-apiVersion : apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: fast-ms-deployment-autoscaling
   labels:
-    app : fast-ms-deployment
+    app: fast-ms-deployment
 spec:
   selector:
     matchLabels:
@@ -14,7 +14,7 @@ spec:
         project: fast-ms
     spec:
       containers:
-        - name : fast-ms-cntr
+        - name: fast-ms-cntr
           image: poncheska/fast-ms:latest
           ports:
             - containerPort: 8080
@@ -47,25 +47,25 @@ kind: Service
 metadata:
   name: fast-ms-service
   labels:
-    env  : prod
+    env: prod
     owner: DenisAstahov
 spec:
   selector:
     project: fast-ms
   ports:
-    - name      : fast-ms-listener
-      protocol  : TCP
-      port      : 8080
+    - name: fast-ms-listener
+      protocol: TCP
+      port: 8080
       targetPort: 8080
   type: ClusterIP
 
 ---
-apiVersion : apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: slow-ms-deployment-autoscaling
   labels:
-    app : slow-ms-deployment
+    app: slow-ms-deployment
 spec:
   selector:
     matchLabels:
@@ -76,7 +76,7 @@ spec:
         project: slow-ms
     spec:
       containers:
-        - name : slow-ms-cntr
+        - name: slow-ms-cntr
           image: poncheska/slow-ms:latest
           ports:
             - containerPort: 8080
@@ -109,15 +109,15 @@ kind: Service
 metadata:
   name: slow-ms-service
   labels:
-    env  : prod
+    env: prod
     owner: DenisAstahov
 spec:
   selector:
     project: slow-ms
   ports:
-    - name      : slow-ms-listener
-      protocol  : TCP
-      port      : 8080
+    - name: slow-ms-listener
+      protocol: TCP
+      port: 8080
       targetPort: 8080
   type: ClusterIP
 
@@ -125,11 +125,11 @@ spec:
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: ingress-paths
+  name: ingress-ms
 
 spec:
   rules:
-      http:
+    - http:
         paths:
           - path: "/slow"
             backend:

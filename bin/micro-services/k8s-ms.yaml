@@ -129,7 +129,6 @@ metadata:
 
 spec:
   rules:
-    - host: 127.0.0.1
       http:
         paths:
           - path: "/slow"

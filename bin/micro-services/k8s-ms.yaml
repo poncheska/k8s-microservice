@@ -140,4 +140,4 @@ spec:
           - path: "/fast"
             backend:
               serviceName: fast-ms-service
-              servicePort: 8080
+              servicePort: 8081

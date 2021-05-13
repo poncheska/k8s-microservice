@@ -1,0 +1,143 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: fast-ms-deployment-autoscaling
+  labels:
+    app : fast-ms-deployment
+spec:
+  selector:
+    matchLabels:
+      project: fast-ms
+  template:
+    metadata:
+      labels:
+        project: fast-ms
+    spec:
+      containers:
+        - name : fast-ms-cntr
+          image: poncheska/fast-ms:latest
+          ports:
+            - containerPort: 8080
+
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: fast-ms-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v2beta1v1
+    kind: Deployment
+    name: fast-ms-deployment-autoscaling
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fast-ms-service
+  labels:
+    env  : prod
+    owner: DenisAstahov
+spec:
+  selector:
+    project: fast-ms
+  ports:
+    - name      : fast-ms-listener
+      protocol  : TCP
+      port      : 8080
+      targetPort: 8080
+  type: LoadBalancer
+
+---
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: slow-ms-deployment-autoscaling
+  labels:
+    app : slow-ms-deployment
+spec:
+  selector:
+    matchLabels:
+      project: slow-ms
+  template:
+    metadata:
+      labels:
+        project: slow-ms
+    spec:
+      containers:
+        - name : slow-ms-cntr
+          image: poncheska/slow-ms:latest
+          ports:
+            - containerPort: 8080
+
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: slow-ms-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v2beta1v1
+    kind: Deployment
+    name: slow-ms-deployment-autoscaling
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: slow-ms-service
+  labels:
+    env  : prod
+    owner: DenisAstahov
+spec:
+  selector:
+    project: slow-ms
+  ports:
+    - name      : slow-ms-listener
+      protocol  : TCP
+      port      : 8080
+      targetPort: 8080
+  type: LoadBalancer
+
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-paths
+
+spec:
+  rules:
+    - host: 127.0.0.1
+      http:
+        paths:
+          - path: "/slow"
+            backend:
+              serviceName: slow-ms-service
+              servicePort: 8080
+
+          - path: "/fast"
+            backend:
+              serviceName: fast-ms-service
+              servicePort: 8080

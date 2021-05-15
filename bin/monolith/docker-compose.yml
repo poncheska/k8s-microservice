@@ -3,10 +3,10 @@ version: '3.5'
 
 services:
   monolith:
-    image: monolith:latest
+    image: poncheska/monolith:latest
     ports:
       - 8080:8080
     environment:
       - HANDLER_GRT=10
-      - HANDLER_TOL=2
+      - HANDLER_TOL=4
       - CFG_VAL=kek

@@ -123,9 +123,9 @@ spec:
             - name: CFG_VAL
               value: kek
             - name: HANDLER_GRT
-              value: 10
+              value: "10"
             - name: HANDLER_TOL
-              value: 4
+              value: "4"
           ports:
             - containerPort: 8080
 

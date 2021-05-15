@@ -47,7 +47,7 @@ kind: Service
 metadata:
   name: fast-ms-service
   labels:
-    env: prod
+    app: k8s-analysis
 spec:
   selector:
     project: fast-ms

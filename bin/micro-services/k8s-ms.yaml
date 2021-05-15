@@ -53,7 +53,8 @@ spec:
   selector:
     project: fast-ms
   ports:
-    - port: 8080
+    - protocol: TCP
+      port: 8080
       targetPort: 8080
 
 ---
@@ -112,7 +113,8 @@ spec:
   selector:
     project: slow-ms
   ports:
-    - port: 80
+    - protocol: TCP
+      port: 80
       targetPort: 8080
 
 ---
@@ -128,14 +130,12 @@ spec:
   rules:
     - http:
         paths:
-          - pathType: Prefix
-            path: "/slow"
+          - path: "/slow"
             backend:
               serviceName: slow-ms-service
               servicePort: 80
 
-          - pathType: Prefix
-            path: "/fast"
+          - path: "/fast"
             backend:
               serviceName: fast-ms-service
               servicePort: 8080

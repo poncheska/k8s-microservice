@@ -48,7 +48,6 @@ metadata:
   name: fast-ms-service
   labels:
     env: prod
-    owner: DenisAstahov
 spec:
   selector:
     project: fast-ms
@@ -110,7 +109,6 @@ metadata:
   name: slow-ms-service
   labels:
     env: prod
-    owner: DenisAstahov
 spec:
   selector:
     project: slow-ms

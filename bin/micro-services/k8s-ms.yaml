@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: fast-ms-deployment-autoscaling
   labels:
-    app: fast-ms-deployment
+    app: k8s-analysis
 spec:
   selector:
     matchLabels:
@@ -52,11 +52,9 @@ spec:
   selector:
     project: fast-ms
   ports:
-    - name: fast-ms-listener
-      protocol: TCP
-      port: 8080
+    - port: 8080
       targetPort: 8080
-  type: ClusterIP
+  type: NodePort
 
 ---
 apiVersion: apps/v1
@@ -64,7 +62,7 @@ kind: Deployment
 metadata:
   name: slow-ms-deployment-autoscaling
   labels:
-    app: slow-ms-deployment
+    app: k8s-analysis
 spec:
   selector:
     matchLabels:
@@ -108,16 +106,14 @@ kind: Service
 metadata:
   name: slow-ms-service
   labels:
-    env: prod
+    app: k8s-analysis
 spec:
   selector:
     project: slow-ms
   ports:
-    - name: slow-ms-listener
-      protocol: TCP
-      port: 8080
+    - port: 8080
       targetPort: 8080
-  type: ClusterIP
+    type: NodePort
 
 ---
 apiVersion: networking.k8s.io/v1beta1
@@ -126,16 +122,24 @@ metadata:
   name: ingress-ms
   annotations:
     kubernetes.io/ingress.global-static-ip-name: ingress-ms-ip
+  labels:
+    app: k8s-analysis
 spec:
   rules:
     - http:
         paths:
-          - path: "/slow"
+          - pathType: Prefix
+            path: "/slow"
             backend:
-              serviceName: slow-ms-service
-              servicePort: 8080
+              service:
+                name: slow-ms-service
+                port:
+                  number: 8080
 
-          - path: "/fast"
+          - pathType: Prefix
+            path: "/fast"
             backend:
-              serviceName: fast-ms-service
-              servicePort: 8081
+              service:
+                name: fast-ms-service
+                port:
+                  number: 8080

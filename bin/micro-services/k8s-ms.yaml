@@ -124,6 +124,7 @@ metadata:
   name: ingress-ms
   annotations:
     kubernetes.io/ingress.global-static-ip-name: ingress-ms-ip
+    nginx.ingress.kubernetes.io/rewrite-target: /
   labels:
     app: k8s-analysis
 spec:

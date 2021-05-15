@@ -18,6 +18,9 @@ func main() {
 	}
 	r := mux.NewRouter()
 	r.Handle("/fast", fastHandler)
+	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
 
 	log.Fatal(http.ListenAndServe(":"+port, r))
 }

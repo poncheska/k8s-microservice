@@ -49,12 +49,12 @@ metadata:
   labels:
     app: k8s-analysis
 spec:
+  type: NodePort
   selector:
     project: fast-ms
   ports:
     - port: 8080
       targetPort: 8080
-  type: NodePort
 
 ---
 apiVersion: apps/v1
@@ -108,12 +108,12 @@ metadata:
   labels:
     app: k8s-analysis
 spec:
+  type: NodePort
   selector:
     project: slow-ms
   ports:
-    - port: 8080
+    - port: 80
       targetPort: 8080
-  type: NodePort
 
 ---
 apiVersion: networking.k8s.io/v1beta1
@@ -131,15 +131,11 @@ spec:
           - pathType: Prefix
             path: "/slow"
             backend:
-              service:
-                name: slow-ms-service
-                port:
-                  number: 8080
+              serviceName: slow-ms-service
+              servicePort: 80
 
           - pathType: Prefix
             path: "/fast"
             backend:
-              service:
-                name: fast-ms-service
-                port:
-                  number: 8080
+              serviceName: fast-ms-service
+              servicePort: 8080

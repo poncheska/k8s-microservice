@@ -17,7 +17,7 @@ func main() {
 		ConfigValue: cfgVal,
 	}
 	r := mux.NewRouter()
-	r.Handle("/", fastHandler)
+	r.Handle("/fast", fastHandler)
 
 	log.Fatal(http.ListenAndServe(":"+port, r))
 }

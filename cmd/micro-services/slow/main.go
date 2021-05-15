@@ -33,7 +33,7 @@ func main() {
 		ConfigValue: cfgVal,
 	}
 	r := mux.NewRouter()
-	r.Handle("/", slowHandler)
+	r.Handle("/slow", slowHandler)
 
 	log.Fatal(http.ListenAndServe(":"+port, r))
 }

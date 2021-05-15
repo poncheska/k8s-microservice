@@ -135,7 +135,7 @@ spec:
               serviceName: slow-ms-service
               servicePort: 80
 
-          - path: "/"
+          - path: "/fast"
             backend:
               serviceName: fast-ms-service
               servicePort: 8080

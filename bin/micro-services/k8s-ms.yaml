@@ -125,7 +125,7 @@ kind: Ingress
 metadata:
   name: ingress-ms
   annotations:
-    ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.global-static-ip-name: ingress-ms-ip
 spec:
   rules:
     - http:
